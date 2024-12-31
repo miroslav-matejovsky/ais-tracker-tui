@@ -45,20 +45,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
-
 	m.lc.Clear()
-	point := canvas.Float64Point{X: float64(m.cursor.X), Y: float64(m.cursor.Y)}
+	point := canvas.Float64Point{X: float64(50), Y: float64(50)}
 	m.lc.DrawBrailleCircle(point, 10)
-
-	// dotsGrid := runes.NewPatternDotsGrid(1, 1)
-	// runes.PatternDots(m.c, dots)
-	// runes.PatternDots(m.c, center)
-	// runes.BraillePatternFromPatternDots(dots)
-	// dots := dotsGrid.BraillePatterns()
-	// runes.BraillePatternFromPatternDots()
-	// m.c.SetCell(m.cursor, canvas.NewCellWithStyle(dots, whiteStyle))
-	// m.c.Set
-
 	return m, nil
 }
 
@@ -74,9 +63,9 @@ func main() {
 	w := 50
 	h := 20
 	minX := 0.0
-	maxX := 10.0
+	maxX := 100.0
 	minY := 0.0
-	maxY := 10.0
+	maxY := 100.0
 	lc := linechart.New(w, h, minX, maxX, minY, maxY)
 
 	m := model{lc, canvas.Point{X: 0, Y: 0}}
