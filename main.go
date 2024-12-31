@@ -5,6 +5,8 @@ import (
 	"os"
 
 	"github.com/NimbleMarkets/ntcharts/canvas"
+	"github.com/NimbleMarkets/ntcharts/canvas/graph"
+	"github.com/NimbleMarkets/ntcharts/canvas/runes"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -63,6 +65,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
+	leftCircle := graph.GetFullCirclePoints(m.cursor.Add(canvas.Point{X: -1, Y: -1}), 3)
+	rightCircle := graph.GetFullCirclePoints(m.cursor.Add(canvas.Point{X: 1, Y: 1}), 3)
+	leftSet := map[canvas.Point]struct{}{}
+	rightSet := map[canvas.Point]struct{}{}
+
+	for _, p := range leftCircle {
+		leftSet[p] = struct{}{}
+	}
+	for _, p := range rightCircle {
+		rightSet[p] = struct{}{}
+	}
+
+	m.c.Clear()
+	for _, p := range leftCircle {
+		if _, ok := rightSet[p]; !ok {
+			m.c.SetCell(p, canvas.NewCellWithStyle(runes.FullBlock, blueStyle))
+		}
+	}
+	for _, p := range rightCircle {
+		if _, ok := leftSet[p]; !ok {
+			m.c.SetCell(p, canvas.NewCellWithStyle(runes.FullBlock, blueStyle))
+		}
+	}
+
 	return m, nil
 }
 
@@ -78,7 +104,7 @@ func main() {
 	w := 50
 	h := 20
 	c := canvas.New(w, h)
-	cursor := canvas.Point{X: 0, Y: 0}
+	cursor := canvas.Point{X: w / 2, Y: h / 2}
 	m := model{c, cursor}
 
 	p := tea.NewProgram(m)
